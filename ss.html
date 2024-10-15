@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: rgb(61, 59, 59);
+        }
+
+        .TASK {
+            position: relative;
+            bottom: 60px;
+            text-align: center;      
+            margin-top: 0%;
+            
+        }
+
+        #list {
+            color: white;
+            list-style-type: none;
+            font-size: 40px;
+        }
+
+        h2 {
+            position: relative;
+            top: 0px;
+            font-size: 75px;
+            text-align: center;
+            color: beige;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            background-color: blueviolet;
+
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            background-color: black;
+        }
+
+        #addtask:hover {
+            background-color: blueviolet;
+        }
+
+        /* Style for delete button */
+        .delete-btn {
+            color: red;
+            background-color: transparent;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+
+        #task-count{
+            color: gold;
+            position: relative;
+            bottom: 50px;
+            font-size: 45px;
+            text-align: center;
+        }
+        
+        li{
+            border: 2px;
+            border-radius: 20px;
+            width: 60%;
+            background-color: burlywood;
+            margin-top: 10px;
+            animation: textSlide 0.8s ease-out;
+        }
+        @keyframes textSlide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(0); }
+        }
+
+        .ff{
+            position: absolute; 
+            top: 260px;
+            right: 170px;
+            font-size: 25px;
+            color: rgb(9, 219, 219);
+        }
+
+        #font-style{
+            font-size: 20px;
+            color: white;
+        }
+        #txt::placeholder{
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h2>To-Do Task</h2>
+    <!-- Task count element -->
+    <h3 id="task-count">Total Tasks: 0</h3>
+
+    <div class="TASK">
+        <input type="text" id="txt" style="color: white;" placeholder="Enter Task">
+        <button id="addtask" style="color: white;"  onclick="addtask()"><b>ADD TASK</b></button>
+        <ul id="list"></ul>
+    </div> 
+    <audio id="notif" src="notif.mp3"></audio>
+    <audio id="DEL" src="del2.mp3"></audio>
+
+    <div class="ff">
+    <label for="font-style">Choose font style:</label>
+<select id="font-style" style="background-color: rgb(187, 104, 118);" onchange="changeFont()">
+    <option value="Arial">Arial</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Verdana">Verdana</option>
+    <option value="Brush Script MT" style="font-family: 'Brush Script MT', cursive;">Brush Script MT</option>
+</select> </div>
+     
+
+    <script>
+
+        function changeFont() {
+        const selectedFont = document.getElementById("font-style").value;
+        document.body.style.fontFamily = selectedFont;
+    }
+
+        let taskCount = 0; // Variable to keep track of the task count
+
+        function updateTaskCount() {
+            const taskCountElement = document.getElementById("task-count");
+            taskCountElement.textContent = `Total Tasks: ${taskCount}`;
+
+            switch(taskCount){
+                case 3: 
+                document.body.style.backgroundColor="#6C4E31";
+                break;
+                case 6: 
+                document.body.style.backgroundColor="#800000";
+                break;
+                case 9: 
+                document.body.style.backgroundColor="#AAB396";
+                break;
+                case 12: 
+                document.body.style.backgroundColor="#36BA98";
+                break;
+                case 15: 
+                document.body.style.backgroundColor="#640D6B";
+                break;
+                default: 
+                document.body.style.backgroundColor="rgb(61, 59, 59)";
+            }  
+            
+        }
+
+        function addtask() {
+            const input = document.getElementById("txt").value.trim();
+            const list = document.getElementById("list");
+            const date = new Date().toLocaleString();
+
+            if (input !== "") {
+                const li = document.createElement("li");
+                li.textContent = `${input} :${date}`;
+                list.appendChild(li);
+
+                // Increment the task count and update the display
+                taskCount++;
+                updateTaskCount();
+
+                const audio = document.getElementById("notif");
+                audio.play();
+
+                // Create the delete button
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Delete";
+                deleteBtn.classList.add("delete-btn");
+
+                // Attach an event to remove the task when the delete button is clicked
+                deleteBtn.onclick = function () {
+                    list.removeChild(li);
+                    // Decrement the task count and update the display
+                    taskCount--;
+                    const delnotif = document.getElementById("DEL");
+                    delnotif.play();
+                    updateTaskCount();
+                };
+
+                // Append the delete button to the task item
+                li.appendChild(deleteBtn);
+
+                // Clear the input field
+                document.getElementById("txt").value = "";
+            } else {
+                
+                alert("PLEASE ENTER A TASK");
+            }
+        }
+    </script>
+</body>
+</html>
